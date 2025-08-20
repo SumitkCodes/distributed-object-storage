@@ -1,11 +1,21 @@
 server:
   port: 8080
+  # Security: limit request size and add timeout
+  max-http-header-size: 8KB
+  connection-timeout: 30s
 
 spring:
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/minis3}
     username: ${SPRING_DATASOURCE_USERNAME:minis3}
     password: ${SPRING_DATASOURCE_PASSWORD:minis3}
+    # Connection pooling for better performance
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
   jpa:
     hibernate:
       ddl-auto: update
@@ -13,7 +23,33 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        # Performance optimizations
+        jdbc:
+          batch_size: 20
+        order_inserts: true
+        order_updates: true
+  # File upload limits for security
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+      file-size-threshold: 2KB
+      location: ${java.io.tmpdir}
+
+# Security: disable sensitive endpoints in production
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when-authorized
 
 logging:
   level:
     root: info
+    com.example.minis3: debug
+    org.springframework.web: warn
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
