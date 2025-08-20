@@ -1,0 +1,12 @@
+# Maven
+target/
+*.log
+
+# OS / IDE
+.DS_Store
+.idea/
+*.iml
+
+# Runtime data
+data/*
+!data/.gitkeep
