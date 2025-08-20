@@ -1,0 +1,9 @@
+server:
+  port: ${SERVER_PORT:9090}
+
+storage:
+  base-dir: ${STORAGE_BASE_DIR:./data}
+
+logging:
+  level:
+    root: info
